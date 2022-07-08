@@ -2,24 +2,27 @@ version: '3.7'
 
 services:
   db:
-    # build: ./containers/mssql
+    build: ./containers/mssql
+    container_name: fast_database
+    restart: on-failure
+    ports:
+      - 1433:1433
+    # command: bash -c "./entrypoint.sh"
+    volumes:
+      - type: volume
+        source: data
+        target: /var/opt/mssql
+    # image: mcr.microsoft.com/mssql/server
     # container_name: fast_database
     # user: root
     # ports:
     #   - 1433:1433
+    # restart: on-failure
+    # environment:
+    #   ACCEPT_EULA: 'Y'
+    #   SA_PASSWORD: 'Passw0rd!'
     # volumes:
     #   - sqlserver:/var/opt/mssql/data
-    image: mcr.microsoft.com/mssql/server
-    container_name: fast_database
-    user: root
-    ports:
-      - 1433:1433
-    restart: on-failure
-    environment:
-      ACCEPT_EULA: 'Y'
-      SA_PASSWORD: 'Passw0rd!'
-    volumes:
-      - sqlserver:/var/opt/mssql/data
   app:
     build: .
     container_name: fast_api
@@ -33,5 +36,4 @@ services:
       - db
 
 volumes:
-  sqlserver:
-    driver: local
+  data:

@@ -1,10 +1,17 @@
-IF DB_ID('OnlineStore') IS NULL
-  CREATE DATABASE OnlineStore COLLATE Latin1_general_CI_AI
+IF DB_ID('teste') IS NOT NULL
+    BEGIN
+        RAISERROR('SKIPPING SCRIPT',1,1)
+    END
+END
 
 GO
-  USE OnlineStore
+CREATE DATABASE OnlineStore COLLATE Latin1_general_CI_AI
+GO
+  USE teste
   
   --====================== CREATING TABLES ===========================
+
+  PRINT('CREATING TABLES')
 
   GO
     IF OBJECT_ID('product_type') IS NULL 
@@ -118,15 +125,19 @@ GO
 
   --====================== CREATING NON CLUSTERED INDEXES ===========================
 
-  GO
-  CREATE NONCLUSTERED INDEX IX_CUSTOMERS_CPF ON customers(CPF)
-  CREATE NONCLUSTERED INDEX IX_CUSTOMERS_EMAIL ON customers(email)
-  CREATE NONCLUSTERED INDEX IX_PRODUCTS_SKU ON products(sku)
+--   GO
+--   CREATE NONCLUSTERED INDEX IX_CUSTOMERS_CPF ON customers(CPF)
+--   CREATE NONCLUSTERED INDEX IX_CUSTOMERS_EMAIL ON customers(email)
+--   CREATE NONCLUSTERED INDEX IX_PRODUCTS_SKU ON products(sku)
 
 
   --====================== CREATING TABLES TRIGGERS ==========================
-  GO
-  CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRDCL_COLLUMN ON product_colors AFTER UPDATE AS
+PRINT('CREATING TABLES TRIGGERS')
+
+GO
+IF NOT EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = 'TRG_UPDATE_UPDATEDAT_PRDCL_COLLUMN')
+BEGIN
+  EXEC('CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRDCL_COLLUMN ON product_colors AFTER UPDATE AS
     BEGIN
       IF NOT UPDATE(updated_at)
         BEGIN
@@ -136,11 +147,13 @@ GO
           inner join inserted as i
           on t.id = i.id
         END
-  END
+    END') 
+END
 
-
-  GO
-  CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRDTP_COLLUMN ON product_type AFTER UPDATE AS
+GO
+IF NOT EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = 'TRG_UPDATE_UPDATEDAT_PRDTP_COLLUMN')
+BEGIN
+  EXEC('CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRDTP_COLLUMN ON product_type AFTER UPDATE AS
     BEGIN
       IF NOT UPDATE(updated_at)
         BEGIN
@@ -150,11 +163,14 @@ GO
           inner join inserted as i
           on t.id = i.id
         END
-  END
+    END') 
+END
 
 
-  GO
-  CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRDBRD_COLLUMN ON product_brand AFTER UPDATE AS
+GO
+IF NOT EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = 'TRG_UPDATE_UPDATEDAT_PRDBRD_COLLUMN')
+  BEGIN
+  EXEC('CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRDBRD_COLLUMN ON product_brand AFTER UPDATE AS
     BEGIN
       IF NOT UPDATE(updated_at)
         BEGIN
@@ -163,12 +179,14 @@ GO
           FROM product_brand AS t
           inner join inserted as i
           on t.id = i.id
-        END
+        END') 
     END
 
 
-  GO
-  CREATE TRIGGER TRG_UPDATE_UPDATEDAT_CST_COLLUMN ON customers AFTER UPDATE AS
+ GO
+ IF NOT EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = 'TRG_UPDATE_UPDATEDAT_CST_COLLUMN')
+  BEGIN
+  EXEC('CREATE TRIGGER TRG_UPDATE_UPDATEDAT_CST_COLLUMN ON customers AFTER UPDATE AS
     BEGIN
       IF NOT UPDATE(updated_at)
         BEGIN
@@ -177,12 +195,14 @@ GO
           FROM customers AS t
           inner join inserted as i
           on t.id = i.id
-        END
+        END')
   END
 
 
   GO
-  CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRD_COLLUMN ON products AFTER UPDATE AS
+  IF NOT EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = 'TRG_UPDATE_UPDATEDAT_PRD_COLLUMN')
+  BEGIN
+  EXEC('CREATE TRIGGER TRG_UPDATE_UPDATEDAT_PRD_COLLUMN ON products AFTER UPDATE AS
     BEGIN
       IF NOT UPDATE(updated_at)
         BEGIN
@@ -191,10 +211,12 @@ GO
           FROM products AS t
           inner join inserted as i
           on t.id = i.id
-        END
+        END') 
     END
 
   --====================== INSERTING DATA IN TABLES ==========================
+
+  PRINT('INSERTING DATA IN TABLES')
 
 GO
 IF (SELECT COUNT(1) FROM product_type) = 0
@@ -324,8 +346,6 @@ IF (SELECT COUNT(1) FROM Product_Colors) = 0
         INSERT INTO product_colors VALUES('EBC10A24-3446-4E5E-9183-FD3FDE47AA06','DFA69DEF-77AA-4B66-876F-33CF04BC543F','Azul Petróleo','//static.netshoes.com.br/produtos/camiseta-industrie-nyc-masculina/79/AD6-0504-879/AD6-0504-879_zoom1.jpg?ts=1642183728',GETDATE(),GETDATE())
 
 END
-
-
 
 
 

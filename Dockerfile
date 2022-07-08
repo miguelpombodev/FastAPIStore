@@ -25,4 +25,4 @@ EXPOSE 8000
 
 COPY . /home/FastAPIStore
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "5700", "--workers", "8"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "5700"]

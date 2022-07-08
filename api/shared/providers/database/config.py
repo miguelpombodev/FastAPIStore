@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, engine
 connection_string = engine.url.URL(
     "mssql+pyodbc",
     username="sa",
-    password="Passw0rd!",
+    password="Passw0rd",
     host="localhost",
     database="OnlineStore"
 )
