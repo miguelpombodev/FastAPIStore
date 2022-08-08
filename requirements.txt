@@ -17,7 +17,7 @@ MarkupSafe==2.1.1
 orjson==3.7.2
 pycodestyle==2.8.0
 pydantic==1.9.1
-pyodbc~=4.0.32
+pyodbc
 python-dotenv==0.20.0
 python-multipart==0.0.5
 PyYAML==6.0

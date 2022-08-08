@@ -1,22 +1,25 @@
+from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, engine
+from sqlalchemy.engine import URL
 
-
-connection_string = engine.url.URL(
-    "mssql+pyodbc",
+connection_string = URL.create(
+    drivername="mssql+pyodbc",
     username="sa",
     password="Passw0rd",
-    host="localhost",
-    database="OnlineStore"
+    host="172.18.0.2",
+    port=1433,
+    database="OnlineStore",
+    query={
+        "driver": "ODBC Driver 17 for SQL Server"
+    }
 )
 
-print(connection_string)
-engine_created = create_engine(connection_string)
-# "mssql+pyodbc://sa:P@ssw0rd!@db:1433/OnlineStore?driver=ODBC+Driver+17+for+SQL+Server")
-
 Base = automap_base()
-# session = Session(engine_created)
-# Base.prepare(autoload_with=engine, reflect=True)
 
-SessionLocal = Session(bind=engine)
+print(connection_string)
+
+engine = create_engine(connection_string)
+
+print(engine)
+
+Base.prepare(engine, reflect=True)

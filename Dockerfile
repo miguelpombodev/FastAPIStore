@@ -1,9 +1,5 @@
 FROM --platform=linux/amd64 python:3.10.4-slim
 
-RUN mkdir /home/FastAPIStore
-
-WORKDIR /home/FastAPIStore
-
 RUN apt-get -y update && apt-get install -y gnupg
 RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get install -y gcc g++ unixodbc-dev unixodbc freetds-dev freetds-common freetds-bin tdsodbc
@@ -16,6 +12,13 @@ RUN ACCEPT_EULA=Y apt-get -y install msodbcsql17=17.7.1.1-1
 RUN apt-get install apt-transport-https -y
 RUN apt-get install libssl1.0 libssl-dev -y
 
+# Copy all ODBC drivers directives -substitute original ones
+COPY ./odbc.ini /etc/odbc.ini
+
+RUN mkdir /home/FastAPIStore
+
+WORKDIR /home/FastAPIStore
+
 COPY requirements.txt /home/FastAPIStore/requirements.txt
 
 RUN pip3 install --upgrade pip
@@ -25,4 +28,4 @@ EXPOSE 8000
 
 COPY . /home/FastAPIStore
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "5700"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
