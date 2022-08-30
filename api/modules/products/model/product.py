@@ -1,11 +1,10 @@
-from sqlalchemy import Table
-from ....shared.providers.database.config import Base, engine
+from ....shared.providers.database.config import session, Base
+
+products = Base.classes.products
 
 
-class Product(Base):
-    __table__ = Table('products', Base.metadata,
-                      autoload=True, autoload_with=engine)
+class Product():
 
     @classmethod
     def getProducts(cls):
-        return cls.query.first()
+        return session.query(products).first()

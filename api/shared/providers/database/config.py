@@ -1,6 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.engine import URL
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+# from ....modules.Base.Model.base_model import BaseModel
 
 connection_string = URL.create(
     drivername="mssql+pyodbc",
@@ -14,12 +17,14 @@ connection_string = URL.create(
     }
 )
 
-Base = automap_base()
-
-print(connection_string)
 
 engine = create_engine(connection_string)
+session = scoped_session(sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+))
 
-print(engine)
 
+Base = automap_base()
 Base.prepare(engine, reflect=True)
