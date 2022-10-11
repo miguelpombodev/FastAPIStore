@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from .routers import products
 import uvicorn
+from dotenv import load_dotenv
 
+load_dotenv()
 
 router_modules = [products]
 

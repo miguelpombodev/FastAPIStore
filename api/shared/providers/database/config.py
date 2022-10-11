@@ -2,18 +2,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import scoped_session, sessionmaker
+from dotenv import dotenv_values
 
-# from ....modules.Base.Model.base_model import BaseModel
+envs = dotenv_values()
+print(envs)
 
 connection_string = URL.create(
-    drivername="mssql+pyodbc",
-    username="sa",
-    password="Passw0rd",
-    host="172.18.0.2",
-    port=1433,
-    database="OnlineStore",
+    drivername=envs["DB_DRIVERNAME"],
+    username=envs["DB_USERNAME"],
+    password=envs["DB_PSWD"],
+    host=envs["DB_HOST"],
+    port=envs["DB_PORT"],
+    database=envs["DB_NAME"],
     query={
-        "driver": "ODBC Driver 17 for SQL Server"
+        "driver": envs["DB_QUERY"]
     }
 )
 
