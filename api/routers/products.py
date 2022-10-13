@@ -1,14 +1,14 @@
 from fastapi import APIRouter
-from ..modules.products.model import Product
-# from ..shared.providers.database.config import connection_string
 
+from ..modules.products.services.list_products_service import ListProductsService
 
 router = APIRouter(prefix="/products")
 
 
 @router.get("")
 async def get_products():
+    listProductsService = ListProductsService()
 
-    products = Product.getProducts()
+    products = listProductsService.execute()
 
     return products

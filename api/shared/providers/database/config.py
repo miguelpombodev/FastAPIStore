@@ -5,7 +5,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import dotenv_values
 
 envs = dotenv_values()
-print(envs)
 
 connection_string = URL.create(
     drivername=envs["DB_DRIVERNAME"],
