@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from api.modules.products.model import Product
+from api.modules.products.services.list_products_service import ListProductsService
 
-from ..modules.products.services.list_products_service import ListProductsService
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/products")
 

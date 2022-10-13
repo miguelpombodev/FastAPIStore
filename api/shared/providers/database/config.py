@@ -13,18 +13,18 @@ connection_string = URL.create(
     host=envs["DB_HOST"],
     port=envs["DB_PORT"],
     database=envs["DB_NAME"],
-    query={
-        "driver": envs["DB_QUERY"]
-    }
+    query={"driver": envs["DB_QUERY"]},
 )
 
 
 engine = create_engine(connection_string)
-session = scoped_session(sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine,
-))
+session = scoped_session(
+    sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=engine,
+    )
+)
 
 
 Base = automap_base()
