@@ -1,34 +1,29 @@
-import datetime
+from sqlalchemy import (
+    Column,
+    NVARCHAR,
+    INTEGER,
+    DECIMAL,
+    ForeignKey
+)
+from sqlalchemy.dialects.mssql import UNIQUEIDENTIFIER
+from sqlalchemy.orm import relationship
 
-from api.modules.base.model import BaseModel
-from .product_brand import ProductBrand
-from .product_colors import ProductColors
-from .product_type import ProductType
 
+from api.shared.providers.database.config import Base
 
-class Product(BaseModel):
-    id: str
-    type_id: int
-    brand_id: int
-    sku: str
-    name: str
-    value: float
-    stock_amount: int
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+class Product(Base):
+    __tablename__ = "products"
 
-class FullDetailProduct(Product):
-    product_brands: list[ProductBrand] | None = []
-    product_colors: list[ProductColors] | None = []
-    product_type: list[ProductType] | None = []
+    id = Column(UNIQUEIDENTIFIER(), primary_key=True)
+    type_id = Column(INTEGER, ForeignKey("product_type.id"), nullable=False)
+    brand_id = Column(INTEGER, ForeignKey("product_brand.id"), nullable=False)
+    sku = Column(NVARCHAR(255), nullable=False)
+    name = Column(NVARCHAR(15), nullable=False)
+    value = Column(DECIMAL(6,2), nullable=False)
+    created_at = Column(NVARCHAR(200), nullable=False)
+    updated_at = Column(NVARCHAR(200), nullable=False)
 
-    def set_brand(self, brand: object):
-        self.product_brands = ProductBrand(**brand.__dict__)
-
-    def set_colors(self, list: list[object]):
-        self.product_colors = [ProductColors(**colors.__dict__) for colors in list]
-
-    def set_type(self, type: object):
-        self.product_type = ProductType(**type.__dict__)
+    product_type = relationship("ProductType", back_populates="product", lazy=True)
+    product_brand = relationship("ProductBrand", back_populates="product", lazy=True)
 
 
