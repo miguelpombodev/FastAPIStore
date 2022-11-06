@@ -25,5 +25,6 @@ class Product(Base):
 
     product_type = relationship("ProductType", back_populates="product", lazy=True)
     product_brand = relationship("ProductBrand", back_populates="product", lazy=True)
+    product_colors = relationship("ProductColors", back_populates="product", lazy=True, uselist=True)
 
 
