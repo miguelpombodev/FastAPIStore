@@ -1,28 +1,31 @@
 # from api.modules.products.model import Product
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 
-from api.modules.products.services import ListProductsService, GetProductByIDService, SaveProductService
+from api.shared.errors.controller_error import ControllerError
 from api.modules.products.model.validations import FullDetailProduct, Product
+from api.modules.products.controller.products_controller import ProductsController
 
 router = APIRouter(prefix="/products")
 
+_controller = ProductsController()
 
 @router.get("", response_model=list[Product])
 def get_products():
-    listProductsService = ListProductsService()
+    try:
+        products_list = _controller.get_products_list()
 
-    products = listProductsService.execute()
-
-    return products
+        return products_list
+    except ControllerError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
 @router.get("/{product_id}", response_model=FullDetailProduct)
 def get_product_by_id(product_id: str):
-    getProductByIDService = GetProductByIDService()
-
-    product = getProductByIDService.execute(product_id)
-
-    return product
+    try:
+        product = _controller.get_one_product(product_id)
+        return product
+    except ControllerError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
 
 # @router.post("/create")
 # def save_product(product: Product = Body):
