@@ -1,14 +1,13 @@
-from time import sleep
-
-from api.modules.products.model import Product
-from api.modules.products.services import ListProductsService, GetProductByIDService, SaveProductService
-
+# from api.modules.products.model import Product
 from fastapi import APIRouter, Body
+
+from api.modules.products.services import ListProductsService, GetProductByIDService, SaveProductService
+from api.modules.products.model.validations import FullDetailProduct, Product
 
 router = APIRouter(prefix="/products")
 
 
-@router.get("")
+@router.get("", response_model=list[Product])
 def get_products():
     listProductsService = ListProductsService()
 
@@ -17,7 +16,7 @@ def get_products():
     return products
 
 
-@router.get("/{product_id}")
+@router.get("/{product_id}", response_model=FullDetailProduct)
 def get_product_by_id(product_id: str):
     getProductByIDService = GetProductByIDService()
 

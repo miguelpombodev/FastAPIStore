@@ -11,7 +11,7 @@ from sqlalchemy.orm import relationship
 
 from api.shared.providers.database.config import Base
 
-class Product(Base):
+class  Product(Base):
     __tablename__ = "products"
 
     id = Column(UNIQUEIDENTIFIER(), primary_key=True)
@@ -19,6 +19,7 @@ class Product(Base):
     brand_id = Column(INTEGER, ForeignKey("product_brand.id"), nullable=False)
     sku = Column(NVARCHAR(255), nullable=False)
     name = Column(NVARCHAR(15), nullable=False)
+    stock_amount = Column(INTEGER, nullable=False)
     value = Column(DECIMAL(6,2), nullable=False)
     created_at = Column(NVARCHAR(200), nullable=False)
     updated_at = Column(NVARCHAR(200), nullable=False)

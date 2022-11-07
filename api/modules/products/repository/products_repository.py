@@ -1,7 +1,7 @@
 from sqlalchemy.orm import contains_eager
 
 from api.shared.providers.database.config import Base
-from api.modules.products.model import Product,ProductColors
+from api.modules.products.model.orm import Product,ProductColors
 
 from ...base.repository import BaseRepository
 
@@ -22,8 +22,6 @@ class ProductsRepository(BaseRepository):
 
     def get_all(self) -> list[Product]:
         products: list[Product] = (self.session.query(Product)
-                                .join(Product.product_brand)     
-                                .options(contains_eager(Product.product_brand))
                                 .all())
         return products
 
