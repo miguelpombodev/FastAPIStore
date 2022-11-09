@@ -9,6 +9,8 @@ from api.shared.errors import (
     ControllerError
 )
 
+from api.modules.products.model.validations import Product
+
 class ProductsController:
     def get_one_product(self, id: str):
         try:
@@ -27,5 +29,15 @@ class ProductsController:
             products = _service.execute()
 
             return products
+        except ServiceError as e:
+            raise ControllerError(status_code=500,message=e)
+
+    def save_product(self, product: Product):
+        try:
+            _service = SaveProductService()
+
+            result = _service.execute(product)
+
+            return result
         except ServiceError as e:
             raise ControllerError(status_code=500,message=e)

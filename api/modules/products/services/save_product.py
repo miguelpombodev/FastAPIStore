@@ -19,7 +19,7 @@ class SaveProductService:
             raise Exception(e)
 
     def __add_UUID_timestamp(self, product: dict):
-        product.id = uuid.uuid5(uuid.NAMESPACE_URL, SHA_SECRET)
+        product.id = uuid.uuid4()
         product.created_at = datetime.utcnow()
         product.updated_at = datetime.utcnow()
 

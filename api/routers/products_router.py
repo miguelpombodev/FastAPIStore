@@ -27,13 +27,11 @@ def get_product_by_id(product_id: str):
     except ControllerError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
-# @router.post("/create")
-# def save_product(product: Product = Body):
-#     try:
-#         _save_product_service = SaveProductService()
+@router.post("/create")
+def save_product(product: Product = Body):
+    try:
+        result = _controller.save_product(product)
 
-#         result = _save_product_service.execute(product)
-
-#         return {"message": result}
-#     except Exception as e:
-#         raise Exception(e)
+        return {"message": result}
+    except Exception as e:
+        raise Exception(e)
