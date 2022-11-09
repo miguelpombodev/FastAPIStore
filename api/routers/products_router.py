@@ -1,4 +1,4 @@
-# from api.modules.products.model import Product
+
 from fastapi import APIRouter, Body, HTTPException
 
 from api.shared.errors.controller_error import ControllerError
@@ -32,6 +32,12 @@ def save_product(product: Product = Body):
     try:
         result = _controller.save_product(product)
 
-        return {"message": result}
-    except Exception as e:
-        raise Exception(e)
+        return {
+                "message": "Product saved",
+                "status": result
+            }
+    except ControllerError as e:
+        raise HTTPException(status_code=e.status_code,detail={
+                "status": False,            
+                "message": str(e.message)
+        })

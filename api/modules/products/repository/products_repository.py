@@ -20,6 +20,16 @@ class ProductsRepository(BaseRepository):
             product.product_colors = (self.session.query(ProductColors).filter(ProductColors.product_id == id).all())
 
             return product
+        except Exception:
+            raise Exception("Product not found")
+
+    def get_by_name(self, name: str):
+        try:
+            product: Product = (self.session.query(Product)
+                                .filter(Product.name == name)
+                                .first())
+
+            return product
         except Exception as e:
             raise Exception(e)
 

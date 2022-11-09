@@ -40,4 +40,4 @@ class ProductsController:
 
             return result
         except ServiceError as e:
-            raise ControllerError(status_code=500,message=e)
+            raise ControllerError(status_code=404,message=e)
