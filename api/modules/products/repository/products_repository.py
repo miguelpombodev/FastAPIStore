@@ -7,7 +7,7 @@ from ...base.repository import BaseRepository
 
 class ProductsRepository(BaseRepository):
 
-    def get_by_id(self, id: str):
+    def get_detailed_by_id(self, id: str):
         try:
             product: Product = (self.session.query(Product)
                                 .join(Product.product_type)
@@ -23,6 +23,16 @@ class ProductsRepository(BaseRepository):
         except Exception:
             raise Exception("Product not found")
 
+    def get_by_id(self, id: str):
+        try:
+            product: Product = (self.session.query(Product)
+                                .filter(Product.id == id)
+                                .first())
+
+            return product
+        except Exception as e:
+            raise Exception(e)
+    
     def get_by_name(self, name: str):
         try:
             product: Product = (self.session.query(Product)
@@ -49,3 +59,22 @@ class ProductsRepository(BaseRepository):
             return True
         except Exception:
             raise Exception("It was not able to save product in database")
+
+    def update_one(self, old_product: Product, new_product):
+        try:
+
+            filter = self.session.query(Product).filter(Product.id == old_product.id)
+
+            # @ToDo: Code smell here, better refactor
+            values = {key: new_product.__dict__[key] for key in new_product.__dict__ if  key in old_product.__dict__ and new_product.__dict__[key] != old_product.__dict__[key]}
+
+            filter.update(values)
+
+            self.session.commit()
+            self.session.flush()
+
+            return {
+                "status": "Item updated successfully"
+            }
+        except Exception as e:
+            raise Exception(e)

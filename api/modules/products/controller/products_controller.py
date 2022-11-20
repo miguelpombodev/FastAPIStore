@@ -1,7 +1,8 @@
 from ..services import (
     ListProductsService,
-    GetProductByIDService, 
-    SaveProductService
+    GetDetailedProductByIDService, 
+    SaveProductService,
+    UpdateProductService
 )
 
 from api.shared.errors import (
@@ -12,9 +13,9 @@ from api.shared.errors import (
 from api.modules.products.model.validations import Product
 
 class ProductsController:
-    def get_one_product(self, id: str):
+    def get_detailed_one_product(self, id: str):
         try:
-            _service = GetProductByIDService()
+            _service = GetDetailedProductByIDService()
 
             product = _service.execute(id)
 
@@ -41,3 +42,13 @@ class ProductsController:
             return result
         except ServiceError as e:
             raise ControllerError(status_code=404,message=e)
+
+    def update_one(self, product_id: str, product: Product):
+        try:
+            _service = UpdateProductService()
+
+            result = _service.execute(product_id, product)
+
+            return result
+        except ServiceError as e:
+            raise ControllerError(status_code=404,message=e) 

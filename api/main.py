@@ -16,5 +16,7 @@ for router in [getattr(module, "router") for module in router_modules]:
 
 init_ORM()
 
+
+
 if __name__ == "main":
     uvicorn.run("main:app", reload=True, port=8000, host="0.0.0.0")
